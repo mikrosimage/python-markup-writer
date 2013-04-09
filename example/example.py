@@ -34,7 +34,7 @@ md.addDoubleLineBreak()
 
 ### LIST ###
 liste = ['mot 1','mot 2','mot 3','mot 4']
-md.addListElement( liste, True, 1 )
+md.addList( liste, True, 1 )
 
 
 ### CODE ###

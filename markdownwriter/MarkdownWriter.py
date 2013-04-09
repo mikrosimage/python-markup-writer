@@ -61,7 +61,7 @@ class MarkdownWriter():
 
 	def addHeader( self, text, level=1 ):
 		if level < 1 or level > 6 :
-			raise ValueError("header level must be include in [1,6]")
+			raise ValueError("header level must be included in [1,6]")
 
 		self.stream += "#"*level + " "
 		self.stream += text + "\n"			
@@ -78,23 +78,23 @@ class MarkdownWriter():
 	def addText( self, text, textStyle='normal'):
 		self.stream += self.getStylizedText( self.transformSpecialCharacters( text ), textStyle )
 
-	def addListElement( self, text, numStyleList=False, tabulation=0, textStyle='normal' ):
+	def addList( self, text, numStyleList=False, tabulation=0, textStyle='normal' ):
 		if type(text) is not list:
 			raise ValueError("request a list of string")
 
 		if tabulation < 0 :
 			raise ValueError("tabulation number must be positive")
 
-		for element in text :
+		for i in range(0,len(text)) :
 			if numStyleList == False :
 				self.stream += ">"*tabulation
 				self.stream += "+ "
-				self.stream += self.getStylizedText( element, textStyle )
+				self.stream += self.getStylizedText( text[i], textStyle )
 				self.addSimpleLineBreak()
 			else : 
 				self.stream += ">"*tabulation
-				self.stream += "1. "
-				self.stream += self.getStylizedText( element, textStyle )
+				self.stream += str(i+1)+". "
+				self.stream += self.getStylizedText( text[i], textStyle )
 				self.addSimpleLineBreak()
 
 	def addCodeBlock( self, codeText ):
