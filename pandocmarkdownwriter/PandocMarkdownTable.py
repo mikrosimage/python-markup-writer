@@ -152,7 +152,7 @@ class PandocMarkdownTable():
 			raise ValueError("alignment not available, possible values are: " + ", ".join(self.alignmentList) )
 
 
-	def addImage( self, imagePath, line, row, scale=1 ):
+	def addImage( self, imagePath, line, row ):
 		if self.size == [0,0]:
 			raise ValueError("setContent() before")
 		if line > self.size[0]-1 or line < 0 :
@@ -191,5 +191,5 @@ class PandocMarkdownTable():
 		string += "\\" + "end{tabular}"
 		string += "\\" + "caption{" + self.title + "}"
 		string += "\\" + "end{"+ self.tableAlignment+ "}"
-		string += "\\" + "end {table} "
+		string += "\\" + "end{table}"
 		return string;

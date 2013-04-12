@@ -120,93 +120,72 @@ def test_transformSpecialCharacters():
 
 ### PANDOCMARKDOWNTABLE TESTS ###
 
-def test_setContentData():
+def test_setContent():
 	table = PandocMarkdownTable()
 	array = [['test']]
-	table.setContent(array)
-	assert table.data == [['test']]
+	table.setContent( array )
+	assert_equal( table.data,    [['test']] )
+	assert_equal( table.size,         [1,1] )
+	assert_equal( table.rowAlignment, ['c'] )
 
-
-def test_setContentSize():
-	table = PandocMarkdownTable()
-	array = [['test']]
-	table.setContent(array)
-	assert table.size == [1,1]
-
-def test_setContentAlignment():
-	table = PandocMarkdownTable()
-	array = [['test']]
-	table.setContent(array)
-	assert table.rowAlignment == ['c']
-
-@raises(Exception)
-def test_setContentArrayType1():
-	table = PandocMarkdownTable()
-	array = ['test']
-	table.setContent(array)
-
-@raises(Exception)
-def test_setContentArrayType2():
-	table = PandocMarkdownTable()
-	array = 'test'
-	table.setContent(array)
+	assert_raises( Exception, table.setContent, ['test'] )
+	assert_raises( Exception, table.setContent,  'test'  )
 
 
 def test_setTitle():
 	table = PandocMarkdownTable()
 	table.setTitle('title test')
-	assert table.title == 'title test'
+	assert_equal( table.title, 'title test' )
 
 
 def test_setTableAlignment():
 	table = PandocMarkdownTable()
 	table.setTableAlignment('left')
-	assert table.tableAlignment == 'flushleft'
+	assert_equal( table.tableAlignment, 'flushleft' )
+
 	table.setTableAlignment('center')
-	assert table.tableAlignment == 'center'
+	assert_equal( table.tableAlignment, 'center' )
+
 	table.setTableAlignment('right')
-	assert table.tableAlignment == 'flushright'
+	assert_equal( table.tableAlignment, 'flushright' )
 
-@raises(Exception)
-def test_setTableAlignmentOther():
-	table = PandocMarkdownTable()
-	table.setTableAlignment('other')
+	assert_raises( Exception, table.setTableAlignment, 'other' )
 
 
-
-def initPancodeMarkdownTable():
+def initPandocMarkdownTable():
 	table = PandocMarkdownTable()
 	array = [['test','test','test'],
 			 ['test','test','test'],
 			 ['test','test','test']]
-	table.setContent(array)
+	table.setContent( array )
 	return table;
 
+
 def test_setBorders():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setBorders('none')
-	assert_equal(table.vLines, ['','','',''])
-	assert_equal(table.hLines, ['','','',''])
+	assert_equal( table.vLines, ['','','',''] )
+	assert_equal( table.hLines, ['','','',''] )
 
 	table.setBorders('out')
-	assert_equal(table.vLines, ['|','','','|'])
-	assert_equal(table.hLines, [' \hline ','','',' \hline '])
+	assert_equal( table.vLines, ['|','','','|'] )
+	assert_equal( table.hLines, [' \hline ','','',' \hline '] )
 
 	table.setBorders('frame')
-	assert_equal(table.vLines, ['|','|','|','|'])
-	assert_equal(table.hLines, [' \hline ',' \hline ',' \hline ', ' \hline '])
+	assert_equal( table.vLines, ['|','|','|','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ',' \hline ', ' \hline '] )
 
 	table.setBorders('header')
-	assert_equal(table.vLines, ['|','','','|'])
-	assert_equal(table.hLines, [' \hline ',' \hline ','',' \hline '])
-	
+	assert_equal( table.vLines, ['|','','','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ','',' \hline '] )
+
 	table.setBorders('doubleheader')
-	assert_equal(table.vLines, ['|','|','','|'])
-	assert_equal(table.hLines, [' \hline ',' \hline ','',' \hline '])
+	assert_equal( table.vLines, ['|','|','','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ','',' \hline '] )
 
 @raises(Exception)
 def test_setBordersOther():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setBorders('other')
 
 @raises(Exception)
@@ -219,102 +198,171 @@ def test_setBordersNoContent():
 
 
 def test_setCellStyleNormal():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setCellStyle(1,1,'normal')
-	assert table.data[1][1] == 'test'
+	assert_equal( table.data[1][1], 'test' )
 
-def test_setCellStyleItalic():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setCellStyle(1,1,'italic')
-	assert table.data[1][1] == '\\textit{test}'
+	assert_equal( table.data[1][1], '\\textit{test}' )
 
-def test_setCellStyleBold():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setCellStyle(1,1,'bold')
-	assert table.data[1][1] == '\\textbf{test}'
+	assert_equal( table.data[1][1], '\\textbf{test}' )
 
-def test_setCellStyleItalicBold():
-	table = initPancodeMarkdownTable()
+	table = initPandocMarkdownTable()
 	table.setCellStyle(1,1,'italic')
 	table.setCellStyle(1,1,'bold')
-	assert table.data[1][1] == '\\textbf{\\textit{test}}'
+	assert_equal( table.data[1][1], '\\textbf{\\textit{test}}' )
 
-def test_setCellStyleBoldItalic():
-	table = initPancodeMarkdownTable()
-	table.setCellStyle(1,1,'bold')
-	table.setCellStyle(1,1,'italic')
-	assert table.data[1][1] == '\\textit{\\textbf{test}}'	
+	table = initPandocMarkdownTable()
+	table.setCellStyle( 1, 1, 'bold' )
+	table.setCellStyle( 1, 1, 'italic' )
+	assert_equal( table.data[1][1], '\\textit{\\textbf{test}}' )
 
-@raises(Exception)
-def test_setCellStyleOther():
-	table = initPancodeMarkdownTable()
-	table.setCellStyle(1,1,'other')
+	table = initPandocMarkdownTable()
+	assert_raises( Exception, table.setCellStyle,  1,  1, 'other'  )
+	assert_raises( Exception, table.setCellStyle,  3,  3, 'normal' )
+	assert_raises( Exception, table.setCellStyle, -1, -1, 'normal' )
+	assert_raises( Exception, table.setCellStyle, -1,  1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  1, -1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  3,  1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  1,  3, 'normal' )
 
-@raises(Exception)
-def test_setCellStyleOutRange1():
-	table = initPancodeMarkdownTable()
-	table.setCellStyle(3,3,'normal')
-
-@raises(Exception)
-def test_setCellStyleOutRange2():
-	table = initPancodeMarkdownTable()
-	table.setCellStyle(-1,-1,'normal')
-
-@raises(Exception)
 def test_setCellStyleNoContent():
 	table = PandocMarkdownTable()
-	array = [['test','test','test'],
-			 ['test','test','test'],
-			 ['test','test','test']]
-	table.setCellStyle(1,1,'normal')
+	assert_raises( Exception, table.setCellStyle, 1, 1, 'normal')
+
 
 
 def test_setTextColorBlack():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'black')
-	assert_equal(table.data[1][1], '\\ {\\color{black}test}') 
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'black' )
+	assert_equal( table.data[1][1], '\\ {\\color{black}test}' ) 
 
 def test_setTextColorWhite():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'white')
-	assert_equal(table.data[1][1], '\\ {\\color{white}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'white' )
+	assert_equal( table.data[1][1], '\\ {\\color{white}test}' )
 
 def test_setTextColorRed():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'red')
-	assert_equal(table.data[1][1], '\\ {\\color{red}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'red' )
+	assert_equal( table.data[1][1], '\\ {\\color{red}test}' )
 
 def test_setTextColorGreen():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'green')
-	assert_equal(table.data[1][1], '\\ {\\color{green}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'green' )
+	assert_equal( table.data[1][1], '\\ {\\color{green}test}' )
 
 def test_setTextColorBlue():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'blue')
-	assert_equal(table.data[1][1], '\\ {\\color{blue}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'blue' )
+	assert_equal( table.data[1][1], '\\ {\\color{blue}test}' )
 
 def test_setTextColorCyan():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'cyan')
-	assert_equal(table.data[1][1], '\\ {\\color{cyan}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'cyan' )
+	assert_equal( table.data[1][1], '\\ {\\color{cyan}test}' )
 
 def test_setTextColorMagenta():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'magenta')
-	assert_equal(table.data[1][1], '\\ {\\color{magenta}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'magenta' )
+	assert_equal( table.data[1][1], '\\ {\\color{magenta}test}' )
 
 def test_setTextColorYellow():
-	table = initPancodeMarkdownTable()
-	table.setTextColor(1,1,'yellow')
-	assert_equal(table.data[1][1], '\\ {\\color{yellow}test}')
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'yellow' )
+	assert_equal( table.data[1][1], '\\ {\\color{yellow}test}' )
+
+def test_setTextColorMultiple():
+	table = initPandocMarkdownTable()
+	table.setTextColor( 1, 1, 'yellow' )
+	table.setTextColor( 1, 1, 'red' )
+	assert_equal( table.data[1][1], '\\ {\\color{red}test}' )
 
 def test_setTextColorOtherAndOutRange():
-	table = initPancodeMarkdownTable()
-	assert_raises( Exception, table.setTextColor,  1,  1, 'other' )
+	table = initPandocMarkdownTable()
+	assert_raises( Exception, table.setTextColor,  1,  1, 'other'  )
 	assert_raises( Exception, table.setTextColor,  3,  3, 'normal' )
-	assert_raises( Exception, table.setTextColor, -1, -1, 'normal')
+	assert_raises( Exception, table.setTextColor, -1, -1, 'normal' )
 
 def test_setTextColorNoContent():	
 	table = PandocMarkdownTable()
 	assert_raises( Exception, table.setTextColor, 1, 1, 'normal' )
+
+
+def test_setRowAlignment():
+	table = initPandocMarkdownTable()
+
+	table.setRowAlignment( 0, 'left' )
+	assert_equal( table.rowAlignment, ['l','c','c'] )
+
+	table.setRowAlignment( 2, 'right' )
+	assert_equal( table.rowAlignment, ['l','c','r'] )
+
+	table.setRowAlignment( 0, 'center' )
+	table.setRowAlignment( 1, 'right'  )
+	table.setRowAlignment( 2, 'left'   )
+	assert_equal( table.rowAlignment, ['c','r','l'] )
+
+	assert_raises( Exception, table.setRowAlignment,  1, 'other'  )
+	assert_raises( Exception, table.setRowAlignment, -1, 'center' )
+	assert_raises( Exception, table.setRowAlignment,  3, 'center' )
+
+def test_setRowAlignmentNoContent():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.setRowAlignment, 1, 'center' )
+
+
+def test_addImage():
+	table = initPandocMarkdownTable()
+	table.addImage( "IMAGEPATH", 1, 1 )
+	assert_equal( table.data[1][1], ' \includegraphics{IMAGEPATH} ' )
+
+	assert_raises( Exception, table.addImage, "IMAGEPATH", -1,  1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  1, -1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3,  1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3, -1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3,  3 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH", -1, -1 )
+
+def test_addImageNoContent():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.addImage, "IMAGEPATH", 1, 1 )
+
+
+def test_getTable():
+	table = initPandocMarkdownTable()
+	stream = table.getTable()
+	assert_equal( stream, "\\begin{table}[h]\\begin{center}\\begin{tabular}{ccc}test&test&test\\\\test&test&test\\\\test&test&test\\\\\\end{tabular}\\caption{}\\end{center}\\end{table}" )
+
+def test_getTableNoContent():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.getTable )
+
+
+### PANDOCMARKDOWNWRITER TESTS ###
+
+def test_addTable():
+	table = initPandocMarkdownTable()
+	pmw = PandocMarkdownWriter()
+	pmw.addTable( table )
+	assert_equal( pmw.stream, "\\begin{table}[h]\\begin{center}\\begin{tabular}{ccc}test&test&test\\\\test&test&test\\\\test&test&test\\\\\\end{tabular}\\caption{}\\end{center}\\end{table}" )
+
+	table = ""
+	assert_raises( Exception, pmw.addTable, table )
+
+def test_addImage():
+	pmw = PandocMarkdownWriter()
+	pmw.addImage( "URL", "TITLE", "LEGEND" )
+	assert_equal( pmw.stream, '![LEGEND](URL \"TITLE\")' )
+
+	pmw = PandocMarkdownWriter()
+	pmw.addImage( "URL", "TITLE" )
+	assert_equal( pmw.stream, '![TITLE](URL \"TITLE\")' )
+
+	pmw = PandocMarkdownWriter()
+	pmw.addImage( "URL" )
+	assert_equal( pmw.stream, '![](URL \"\")' )
+
