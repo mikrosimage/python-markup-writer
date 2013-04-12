@@ -6,9 +6,9 @@ class PandocMarkdownTable():
 		self.size  = [0,0]
 		self.title = ""
 
-		self.alignementList = ['left','center','right']
-		self.tableAlignement = "center"
-		self.rowAlignement = []
+		self.alignmentList = ['left','center','right']
+		self.tableAlignment = "center"
+		self.rowAlignment = []
 		
 		self.textStyles = ['normal','italic','bold']
 		self.textColors = ['black','white','red','green','blue','cyan','magenta','yellow']
@@ -16,30 +16,41 @@ class PandocMarkdownTable():
 		self.borderStyles = ['none','out','frame','header','doubleheader']
 		self.vLines = []
 		self.hLines = []
-		self.image  = False
 
 
 	def setContent( self, array ):
+		if type(array) is not list :
+			raise ValueError( "list of lists expected" )
+		if type(array[0]) is not list :
+			raise ValueError( "list of lists expected" )
+
 		self.data = array
 		width = []
 		for line in self.data:
 			width.append( len(line) )
 		self.size = [ len( self.data ), max(width) ]
-		for i in range(0, self.size[1]):
-			self.rowAlignement.append('c')
 
-	def setTitle( self, title ):
+		for i in range(0, self.size[1]):
+			self.rowAlignment.append('c')
+
+		for i in range(0, self.size[1]+1):
+			self.vLines.append('')
+
+		for i in range(0, self.size[0]+1):
+			self.hLines.append('')	
+
+	def setTitle( self, title ):		
 		self.title = title
 
-	def setTableAlignement( self, alignement ):
-		if alignement == self.alignementList[0] :
-			self.tableAlignement = 'flushleft'
-		elif alignement == self.alignementList[1] :
-			self.tableAlignement = 'center'
-		elif alignement == self.alignementList[2] :
-			self.tableAlignement = 'flushright'
+	def setTableAlignment( self, alignment ):
+		if alignment == self.alignmentList[0] :
+			self.tableAlignment = 'flushleft'
+		elif alignment == self.alignmentList[1] :
+			self.tableAlignment = 'center'
+		elif alignment == self.alignmentList[2] :
+			self.tableAlignment = 'flushright'
 		else:
-			raise ValueError("alignement not available, possible values are: " + ", ".join(self.alignementList) )
+			raise ValueError("alignment not available, possible values are: " + ", ".join(self.alignmentList) )
 
 
 	def setBorders( self, borderStyle ):
@@ -47,45 +58,45 @@ class PandocMarkdownTable():
 			raise ValueError("setContent() before")
 
 		if   borderStyle == self.borderStyles[1]: #out
-			self.vLines.append('|')
-			for i in range(0, self.size[1]):
-				self.vLines.append('')			
+			self.vLines[0] = '|'
+			for i in range(1, self.size[1]):
+				self.vLines[i] = ''		
 			self.vLines[ self.size[1] ] = '|'
 
-			self.hLines.append(' \hline ')
-			for i in range(0, self.size[0]):
-				self.hLines.append('')			
+			self.hLines[0] = ' \hline '
+			for i in range(1, self.size[0]):
+				self.hLines[i] = ''			
 			self.hLines[ self.size[0] ] = ' \hline '
 
 		elif borderStyle == self.borderStyles[2]: #frame
 			for i in range(0, self.size[1]+1):
-				self.vLines.append('|')
+				self.vLines[i] = '|'
 			for i in range(0, self.size[0]+1):
-				self.hLines.append(' \hline ')
+				self.hLines[i] = ' \hline '
 
 		elif borderStyle == self.borderStyles[3]: #header
-			self.vLines.append('|')
-			for i in range(0, self.size[1]):
-				self.vLines.append('')			
+			self.vLines[0] = '|'
+			for i in range(1, self.size[1]):
+				self.vLines[i] = ''		
 			self.vLines[ self.size[1] ] = '|'
 
-			self.hLines.append(' \hline ')
-			self.hLines.append(' \hline ')
-			for i in range(1, self.size[0]):
-				self.hLines.append('')			
+			self.hLines[0] = ' \hline '
+			self.hLines[1] = ' \hline '
+			for i in range(2, self.size[0]):
+				self.hLines[i] = ''			
 			self.hLines[ self.size[0] ] = ' \hline '
 
 		elif borderStyle == self.borderStyles[4]: #doubleheader
-			self.vLines.append('|')
-			self.vLines.append('|')
-			for i in range(1, self.size[1]):
-				self.vLines.append('')			
+			self.vLines[0] = '|'
+			self.vLines[1] = '|'
+			for i in range(2, self.size[1]):
+				self.vLines[i] = ''			
 			self.vLines[ self.size[1] ] = '|'
 
-			self.hLines.append(' \hline ')
-			self.hLines.append(' \hline ')
-			for i in range(1, self.size[0]):
-				self.hLines.append('')			
+			self.hLines[0] = ' \hline '
+			self.hLines[1] = ' \hline '
+			for i in range(2, self.size[0]):
+				self.hLines[i] = ''			
 			self.hLines[ self.size[0] ] = ' \hline '
 
 		elif borderStyle != self.borderStyles[0] :
@@ -95,9 +106,9 @@ class PandocMarkdownTable():
 	def setCellStyle( self, line, row, textStyle ):
 		if self.size == [0,0]:
 			raise ValueError("setContent() before")
-		if line > self.size[0] or line < 0 :
+		if line > self.size[0]-1 or line < 0 :
 			raise ValueError("line value not valid")
-		if row  > self.size[1] or row  < 0 :
+		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
 		if textStyle == self.textStyles[1]:
@@ -110,37 +121,43 @@ class PandocMarkdownTable():
 	def setTextColor( self, line, row, color ):
 		if self.size == [0,0]:
 			raise ValueError("setContent() before")
-		if line > self.size[0] or line < 0 :
+		if line > self.size[0]-1 or line < 0 :
 			raise ValueError("line value not valid")
-		if row  > self.size[1] or row  < 0 :
+		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
-		if self.textColors.count(color) == 0:
+		if self.textColors.count( color ) == 0:
 			raise ValueError("cell style is not available, possible values are: " + ", ".join(self.textColors) )
-		self.data[line][row] = "\\ "+"{"+"\\"+"color{"+color+"}"+self.data[line][row]+"}"
 
-	def setRowAlignement( self, row, alignement ):
+		if self.data[line][row].count( '\ {\color{') :
+			for textColor in self.textColors :
+				if self.data[line][row].count( textColor ) :
+					self.data[line][row] = self.data[line][row].replace( textColor, color )
+		else:
+			self.data[line][row] = "\\ "+"{"+"\\"+"color{"+color+"}"+self.data[line][row]+"}"
+
+	def setRowAlignment( self, row, alignment ):
 		if self.size == [0,0]:
 			raise ValueError("setContent() before")
-		if row > self.size[1] or row < 0 :
+		if row > self.size[1]-1 or row < 0 :
 			raise ValueError("row value not valid")
 		
-		if alignement == self.alignementList[0] :
-			self.rowAlignement[row] = 'l'
-		elif alignement == self.alignementList[1] :
-			self.rowAlignement[row] = 'c'
-		elif alignement == self.alignementList[2] :
-			self.rowAlignement[row] = 'r'
+		if alignment == self.alignmentList[0] :
+			self.rowAlignment[row] = 'l'
+		elif alignment == self.alignmentList[1] :
+			self.rowAlignment[row] = 'c'
+		elif alignment == self.alignmentList[2] :
+			self.rowAlignment[row] = 'r'
 		else:
-			raise ValueError("alignement not available, possible values are: " + ", ".join(self.alignementList) )
+			raise ValueError("alignment not available, possible values are: " + ", ".join(self.alignmentList) )
 
 
 	def addImage( self, imagePath, line, row, scale=1 ):
 		if self.size == [0,0]:
 			raise ValueError("setContent() before")
-		if line > self.size[0] or line < 0 :
+		if line > self.size[0]-1 or line < 0 :
 			raise ValueError("line value not valid")
-		if row  > self.size[1] or row  < 0 :
+		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
 		self.data[line][row] = " \\" + "includegraphics{" + imagePath + "} "
@@ -151,14 +168,13 @@ class PandocMarkdownTable():
 		if len( self.data ) == 0 :
 			raise ValueError("setData() before getTable()")
 		
-		print self.image
 		string += "\\" + "begin{table}[h]"
-		string += "\\" + "begin{"+ self.tableAlignement+ "}"
+		string += "\\" + "begin{"+ self.tableAlignment+ "}"
 		string += "\\" + "begin{tabular}{"
 
 		for i in range(0, self.size[1]):
 			string += self.vLines[i]
-			string += self.rowAlignement[i]
+			string += self.rowAlignment[i]
 		string += self.vLines[ self.size[1] ]
 		string += "}"
 		
@@ -174,6 +190,6 @@ class PandocMarkdownTable():
 
 		string += "\\" + "end{tabular}"
 		string += "\\" + "caption{" + self.title + "}"
-		string += "\\" + "end{"+ self.tableAlignement+ "}"
+		string += "\\" + "end{"+ self.tableAlignment+ "}"
 		string += "\\" + "end {table} "
 		return string;
