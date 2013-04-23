@@ -15,3 +15,8 @@ class PandocMarkdownWriter( MarkdownWriter ):
 			imageLegend = imageTitle
 		self.stream += "![" + imageLegend + "]"
 		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")"
+
+
+	def addTitle( self, title ):
+		self.stream += "%"+ title
+		
