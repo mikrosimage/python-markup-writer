@@ -18,5 +18,4 @@ class PandocMarkdownWriter( MarkdownWriter ):
 
 
 	def addTitle( self, title ):
-		self.stream += "%"+ title
-		
+		self.stream += "%"+ title + "\n"
