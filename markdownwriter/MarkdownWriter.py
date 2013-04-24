@@ -35,7 +35,6 @@ class MarkdownWriter():
 		string = string.replace('#', '\#')
 		string = string.replace('+', '\+')
 		string = string.replace('-', '\-')
-		string = string.replace('.', '\.')
 		string = string.replace('!', '\!')
 		string = string.replace('&', '&amp;')
 		string = string.replace('<', '&lt;')
