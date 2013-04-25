@@ -100,7 +100,7 @@ class PandocMarkdownTable():
 			self.hLines[ self.size[0] ] = ' \hline '
 
 		elif borderStyle != self.borderStyles[0] :
-				raise ValueError("cell style is not available, possible values are: " + ", ".join(self.borderStyles) )		
+				raise ValueError("cell style is not available, possible values are: " + ", ".join(self.borderStyles) )
 
 
 	def setCellStyle( self, line, row, textStyle ):
@@ -112,9 +112,11 @@ class PandocMarkdownTable():
 			raise ValueError("row value not valid")
 
 		if textStyle == self.textStyles[1]:
-			self.data[line][row] = "\\"+"textit{"+ self.data[line][row] +"}"
+			for k in range( 0, len( self.data[line][row] ) ):
+				self.data[line][row][k] = "\\"+"textit{"+ self.data[line][row][k] +"}"
 		elif textStyle == self.textStyles[2]:
-			self.data[line][row] = "\\"+"textbf{"+ self.data[line][row] +"}"
+			for k in range( 0, len( self.data[line][row] ) ):
+				self.data[line][row][k] = "\\"+"textbf{"+ self.data[line][row][k] +"}"
 		elif textStyle != self.textStyles[0] :
 			raise ValueError("cell style is not available, possible values are: " + ", ".join(self.textStyles) )
 
@@ -129,12 +131,13 @@ class PandocMarkdownTable():
 		if self.textColors.count( color ) == 0:
 			raise ValueError("cell style is not available, possible values are: " + ", ".join(self.textColors) )
 
-		if self.data[line][row].count( '\ {\color{') :
-			for textColor in self.textColors :
-				if self.data[line][row].count( textColor ) :
-					self.data[line][row] = self.data[line][row].replace( textColor, color )
-		else:
-			self.data[line][row] = "\\ "+"{"+"\\"+"color{"+color+"}"+self.data[line][row]+"}"
+		for k in range( 0, len( self.data[line][row] ) ):
+			if self.data[line][row][k].count( '\ {\color{') :
+				for textColor in self.textColors :
+					if self.data[line][row][k].count( textColor ) :
+						self.data[line][row][k] = self.data[line][row][k].replace( textColor, color )
+			else:
+				self.data[line][row][k] = "{"+"\\"+"color{"+color+"}"+self.data[line][row][k]+"}"
 
 	def setRowAlignment( self, row, alignment ):
 		if self.size == [0,0]:
@@ -160,7 +163,7 @@ class PandocMarkdownTable():
 		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
-		self.data[line][row] = " \\" + "includegraphics{" + imagePath + "} "
+		self.data[line][row][0] = " \\" + "includegraphics{" + imagePath + "} "
 
 
 	def getTable( self ):
@@ -180,16 +183,32 @@ class PandocMarkdownTable():
 		
 		for i in range(0, self.size[0]) :
 			string += self.hLines[i]
-			j=0
-			while j!=len(self.data[i])-1:
+			for j in range( 0, len(self.data[i]) ):
+				if len(self.data[i][j]) == 1:
+					string += self.data[i][j][0] + "&"
+				else:
+					kHeight = len(self.data[i][j])
+					kWidth  = []
+					for k in range( 0, len(self.data[i][j]) ):
+						kWidth.append( len(self.data[i][j][k]) )
+					kWidthMax = max( kWidth )
 
-				string += self.data[i][j] + "&"
-				j+=1
-			string += self.data[i][j] + "\\" + "\\"
+					string += "\\" + "begin{tabular}{"
+					string += self.rowAlignment[j] + "}"
+
+					for k in range( 0, kHeight ):
+						string += self.data[i][j][k]
+						if( k != kHeight-1 ):
+							string += "\\" + "\\"
+					
+					string += "\\" + "end{tabular}"
+					string += "\\" + "\\"
+
 		string += self.hLines[ self.size[0] ]
 
 		string += "\\" + "end{tabular}"
 		string += "\\" + "caption{" + self.title + "}"
 		string += "\\" + "end{"+ self.tableAlignment+ "}"
 		string += "\\" + "end{table}"
+
 		return string;
