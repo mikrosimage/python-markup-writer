@@ -111,8 +111,6 @@ class PandocMarkdownTable():
 		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
-		print type(self.data[line][row])
-
 		if textStyle == self.textStyles[1]:
 			if type( self.data[line][row] ) is not list :
 				self.data[line][row] = "\\"+"textit{"+ self.data[line][row] +"}"
@@ -204,18 +202,15 @@ class PandocMarkdownTable():
 			string += self.hLines[i]
 			for j in range( 0, len(self.data[i]) ):
 				if type( self.data[i][j] ) is not list:
-					print "Normal string !"
 					string += self.data[i][j]
 					if j != len(self.data[i])-1 :
 						string += "&"
 
 				elif len(self.data[i][j]) == 1 :
-					print "Single Array !"
 					string += self.data[i][j][0]
 					if j != len(self.data[i])-1 :
 						string += "&"
 				else:
-					print "Array !"
 					kHeight = len(self.data[i][j])
 					kWidth  = []
 					for k in range( 0, len(self.data[i][j]) ):
