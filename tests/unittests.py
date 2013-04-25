@@ -197,7 +197,7 @@ def test_setBordersNoContent():
 	table.setBorders('none')
 
 
-def test_setCellStyleNormal():
+def test_setCellStyle():
 	table = initPandocMarkdownTable()
 	table.setCellStyle(1,1,'normal')
 	assert_equal( table.data[1][1], 'test' )
@@ -238,48 +238,48 @@ def test_setCellStyleNoContent():
 def test_setTextColorBlack():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'black' )
-	assert_equal( table.data[1][1], '\\ {\\color{black}test}' ) 
+	assert_equal( table.data[1][1], '{\\color{black}test}' ) 
 
 def test_setTextColorWhite():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'white' )
-	assert_equal( table.data[1][1], '\\ {\\color{white}test}' )
+	assert_equal( table.data[1][1], '{\\color{white}test}' )
 
 def test_setTextColorRed():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'red' )
-	assert_equal( table.data[1][1], '\\ {\\color{red}test}' )
+	assert_equal( table.data[1][1], '{\\color{red}test}' )
 
 def test_setTextColorGreen():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'green' )
-	assert_equal( table.data[1][1], '\\ {\\color{green}test}' )
+	assert_equal( table.data[1][1], '{\\color{green}test}' )
 
 def test_setTextColorBlue():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'blue' )
-	assert_equal( table.data[1][1], '\\ {\\color{blue}test}' )
+	assert_equal( table.data[1][1], '{\\color{blue}test}' )
 
 def test_setTextColorCyan():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'cyan' )
-	assert_equal( table.data[1][1], '\\ {\\color{cyan}test}' )
+	assert_equal( table.data[1][1], '{\\color{cyan}test}' )
 
 def test_setTextColorMagenta():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'magenta' )
-	assert_equal( table.data[1][1], '\\ {\\color{magenta}test}' )
+	assert_equal( table.data[1][1], '{\\color{magenta}test}' )
 
 def test_setTextColorYellow():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'yellow' )
-	assert_equal( table.data[1][1], '\\ {\\color{yellow}test}' )
+	assert_equal( table.data[1][1], '{\\color{yellow}test}' )
 
 def test_setTextColorMultiple():
 	table = initPandocMarkdownTable()
 	table.setTextColor( 1, 1, 'yellow' )
 	table.setTextColor( 1, 1, 'red' )
-	assert_equal( table.data[1][1], '\\ {\\color{red}test}' )
+	assert_equal( table.data[1][1], '{\\color{red}test}' )
 
 def test_setTextColorOtherAndOutRange():
 	table = initPandocMarkdownTable()
@@ -342,7 +342,292 @@ def test_getTableNoContent():
 	assert_raises( Exception, table.getTable )
 
 
-### PANDOCMARKDOWNWRITER TESTS ###
+	## ARRAY TABLE ##
+
+def initPandocMarkdownArrayTable():
+	table = PandocMarkdownTable()
+	array = [[['test'],['test','test'],['test']],
+			 ['test','test','test'],
+			 ['test',['test','test'],['test']]]
+	table.setContent( array )
+	return table;
+
+
+def test_setBordersArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setBorders('none')
+	assert_equal( table.vLines, ['','','',''] )
+	assert_equal( table.hLines, ['','','',''] )
+
+	table.setBorders('out')
+	assert_equal( table.vLines, ['|','','','|'] )
+	assert_equal( table.hLines, [' \hline ','','',' \hline '] )
+
+	table.setBorders('frame')
+	assert_equal( table.vLines, ['|','|','|','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ',' \hline ', ' \hline '] )
+
+	table.setBorders('header')
+	assert_equal( table.vLines, ['|','','','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ','',' \hline '] )
+
+	table.setBorders('doubleheader')
+	assert_equal( table.vLines, ['|','|','','|'] )
+	assert_equal( table.hLines, [' \hline ',' \hline ','',' \hline '] )
+
+@raises(Exception)
+def test_setBordersOtherArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setBorders('other')
+
+@raises(Exception)
+def test_setBordersNoContentArrayTable():
+	table = PandocMarkdownTable()
+	array = [[['test'],['test','test'],['test']],
+			 ['test','test','test'],
+			 ['test',['test','test'],['test']]]
+	table.setBorders('none')
+
+
+def test_setCellStyleArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setCellStyle(0,0,'normal')
+	assert_equal( table.data[0][0][0], 'test' )
+	table.setCellStyle(0,1,'normal')
+	assert_equal( table.data[0][1][0], 'test' )
+	table.setCellStyle(2,1,'normal')
+	assert_equal( table.data[2][1][1], 'test' )
+	table.setCellStyle(1,1,'normal')
+	assert_equal( table.data[1][1],    'test' )
+
+	table = initPandocMarkdownArrayTable()
+	table.setCellStyle(0,0,'italic')
+	assert_equal( table.data[0][0][0], '\\textit{test}' )
+	table.setCellStyle(0,1,'italic')
+	assert_equal( table.data[0][1][0], '\\textit{test}' )
+	table.setCellStyle(2,1,'italic')
+	assert_equal( table.data[2][1][1], '\\textit{test}' )
+	table.setCellStyle(1,1,'italic')
+	assert_equal( table.data[1][1],    '\\textit{test}' )
+
+	table = initPandocMarkdownArrayTable()
+	table.setCellStyle(0,0,'bold')
+	assert_equal( table.data[0][0][0], '\\textbf{test}' )
+	table.setCellStyle(0,1,'bold')
+	assert_equal( table.data[0][1][0], '\\textbf{test}' )
+	table.setCellStyle(2,1,'bold')
+	assert_equal( table.data[2][1][1], '\\textbf{test}' )
+	table.setCellStyle(1,1,'bold')
+	assert_equal( table.data[1][1],    '\\textbf{test}' )
+
+	table = initPandocMarkdownArrayTable()
+	table.setCellStyle(0,0,'italic')
+	table.setCellStyle(0,0,'bold')
+	assert_equal( table.data[0][0][0], '\\textbf{\\textit{test}}' )
+	table.setCellStyle(0,1,'italic')
+	table.setCellStyle(0,1,'bold')
+	assert_equal( table.data[0][1][0], '\\textbf{\\textit{test}}' )
+	table.setCellStyle(2,1,'italic')
+	table.setCellStyle(2,1,'bold')
+	assert_equal( table.data[2][1][1], '\\textbf{\\textit{test}}' )
+	table.setCellStyle(1,1,'italic')
+	table.setCellStyle(1,1,'bold')
+	assert_equal( table.data[1][1],    '\\textbf{\\textit{test}}' )
+
+	table = initPandocMarkdownArrayTable()
+	table.setCellStyle( 0, 0, 'bold' )
+	table.setCellStyle( 0, 0, 'italic' )
+	assert_equal( table.data[0][0][0], '\\textit{\\textbf{test}}' )
+	table.setCellStyle( 0, 1, 'bold' )
+	table.setCellStyle( 0, 1, 'italic' )
+	assert_equal( table.data[0][1][0], '\\textit{\\textbf{test}}' )
+	table.setCellStyle( 2, 1, 'bold' )
+	table.setCellStyle( 2, 1, 'italic' )
+	assert_equal( table.data[2][1][1], '\\textit{\\textbf{test}}' )
+	table.setCellStyle( 1, 1, 'bold' )
+	table.setCellStyle( 1, 1, 'italic' )
+	assert_equal( table.data[1][1],    '\\textit{\\textbf{test}}' )
+
+	table = initPandocMarkdownArrayTable()
+	assert_raises( Exception, table.setCellStyle,  1,  1, 'other'  )
+	assert_raises( Exception, table.setCellStyle,  3,  3, 'normal' )
+	assert_raises( Exception, table.setCellStyle, -1, -1, 'normal' )
+	assert_raises( Exception, table.setCellStyle, -1,  1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  1, -1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  3,  1, 'normal' )
+	assert_raises( Exception, table.setCellStyle,  1,  3, 'normal' )
+
+def test_setCellStyleNoContentArrayTable():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.setCellStyle, 1, 1, 'normal')
+
+
+
+def test_setTextColorBlackArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'black' )
+	assert_equal( table.data[0][0][0], '{\\color{black}test}' )
+	table.setTextColor( 0, 1, 'black' )
+	assert_equal( table.data[0][1][0], '{\\color{black}test}' )
+	table.setTextColor( 2, 1, 'black' )
+	assert_equal( table.data[2][1][1], '{\\color{black}test}' )
+	table.setTextColor( 1, 1, 'black' )
+	assert_equal( table.data[1][1],    '{\\color{black}test}' ) 
+
+def test_setTextColorWhiteArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'white' )
+	assert_equal( table.data[0][0][0], '{\\color{white}test}' )
+	table.setTextColor( 0, 1, 'white' )
+	assert_equal( table.data[0][1][0], '{\\color{white}test}' )
+	table.setTextColor( 2, 1, 'white' )
+	assert_equal( table.data[2][1][1], '{\\color{white}test}' )
+	table.setTextColor( 1, 1, 'white' )
+	assert_equal( table.data[1][1],    '{\\color{white}test}' )
+
+def test_setTextColorRedArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'red' )
+	assert_equal( table.data[0][0][0], '{\\color{red}test}' )
+	table.setTextColor( 0, 1, 'red' )
+	assert_equal( table.data[0][1][0], '{\\color{red}test}' )
+	table.setTextColor( 2, 1, 'red' )
+	assert_equal( table.data[2][1][1], '{\\color{red}test}' )
+	table.setTextColor( 1, 1, 'red' )
+	assert_equal( table.data[1][1],    '{\\color{red}test}' )
+
+def test_setTextColorGreenArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'green' )
+	assert_equal( table.data[0][0][0], '{\\color{green}test}' )
+	table.setTextColor( 0, 1, 'green' )
+	assert_equal( table.data[0][1][0], '{\\color{green}test}' )
+	table.setTextColor( 2, 1, 'green' )
+	assert_equal( table.data[2][1][1], '{\\color{green}test}' )
+	table.setTextColor( 1, 1, 'green' )
+	assert_equal( table.data[1][1],    '{\\color{green}test}' )
+
+def test_setTextColorBlueArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'blue' )
+	assert_equal( table.data[0][0][0], '{\\color{blue}test}' )
+	table.setTextColor( 0, 1, 'blue' )
+	assert_equal( table.data[0][1][0], '{\\color{blue}test}' )
+	table.setTextColor( 2, 1, 'blue' )
+	assert_equal( table.data[2][1][1], '{\\color{blue}test}' )
+	table.setTextColor( 1, 1, 'blue' )
+	assert_equal( table.data[1][1],    '{\\color{blue}test}' )
+
+def test_setTextColorCyanArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'cyan' )
+	assert_equal( table.data[0][0][0], '{\\color{cyan}test}' )
+	table.setTextColor( 0, 1, 'cyan' )
+	assert_equal( table.data[0][1][0], '{\\color{cyan}test}' )
+	table.setTextColor( 2, 1, 'cyan' )
+	assert_equal( table.data[2][1][1], '{\\color{cyan}test}' )
+	table.setTextColor( 1, 1, 'cyan' )
+	assert_equal( table.data[1][1],    '{\\color{cyan}test}' )
+
+def test_setTextColorMagentaArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'magenta' )
+	assert_equal( table.data[0][0][0], '{\\color{magenta}test}' )
+	table.setTextColor( 0, 1, 'magenta' )
+	assert_equal( table.data[0][1][0], '{\\color{magenta}test}' )
+	table.setTextColor( 2, 1, 'magenta' )
+	assert_equal( table.data[2][1][1], '{\\color{magenta}test}' )
+	table.setTextColor( 1, 1, 'magenta' )
+	assert_equal( table.data[1][1],    '{\\color{magenta}test}' )
+
+def test_setTextColorYellowArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'yellow' )
+	assert_equal( table.data[0][0][0], '{\\color{yellow}test}' )
+	table.setTextColor( 0, 1, 'yellow' )
+	assert_equal( table.data[0][1][0], '{\\color{yellow}test}' )
+	table.setTextColor( 2, 1, 'yellow' )
+	assert_equal( table.data[2][1][1], '{\\color{yellow}test}' )
+	table.setTextColor( 1, 1, 'yellow' )
+	assert_equal( table.data[1][1],    '{\\color{yellow}test}' )
+
+def test_setTextColorMultipleArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.setTextColor( 0, 0, 'yellow' )
+	table.setTextColor( 0, 0, 'red' )
+	assert_equal( table.data[0][0][0], '{\\color{red}test}' )
+	table.setTextColor( 0, 1, 'yellow' )
+	table.setTextColor( 0, 1, 'red' )
+	assert_equal( table.data[0][1][0], '{\\color{red}test}' )
+	table.setTextColor( 2, 1, 'yellow' )
+	table.setTextColor( 2, 1, 'red' )
+	assert_equal( table.data[2][1][1], '{\\color{red}test}' )
+	table.setTextColor( 1, 1, 'yellow' )
+	table.setTextColor( 1, 1, 'red' )
+	assert_equal( table.data[1][1],    '{\\color{red}test}' )
+
+def test_setTextColorOtherAndOutRangeArrayTable():
+	table = initPandocMarkdownArrayTable()
+	assert_raises( Exception, table.setTextColor,  1,  1, 'other'  )
+	assert_raises( Exception, table.setTextColor,  3,  3, 'normal' )
+	assert_raises( Exception, table.setTextColor, -1, -1, 'normal' )
+
+def test_setTextColorNoContentArrayTable():	
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.setTextColor, 1, 1, 'normal' )
+
+
+def test_setRowAlignmentArrayTable():
+	table = initPandocMarkdownArrayTable()
+
+	table.setRowAlignment( 0, 'left' )
+	assert_equal( table.rowAlignment, ['l','c','c'] )
+
+	table.setRowAlignment( 2, 'right' )
+	assert_equal( table.rowAlignment, ['l','c','r'] )
+
+	table.setRowAlignment( 0, 'center' )
+	table.setRowAlignment( 1, 'right'  )
+	table.setRowAlignment( 2, 'left'   )
+	assert_equal( table.rowAlignment, ['c','r','l'] )
+
+	assert_raises( Exception, table.setRowAlignment,  1, 'other'  )
+	assert_raises( Exception, table.setRowAlignment, -1, 'center' )
+	assert_raises( Exception, table.setRowAlignment,  3, 'center' )
+
+def test_setRowAlignmentNoContentArrayTable():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.setRowAlignment, 1, 'center' )
+
+
+def test_addImageArrayTable():
+	table = initPandocMarkdownArrayTable()
+	table.addImage( "IMAGEPATH", 1, 1 )
+	assert_equal( table.data[1][1],    ' \includegraphics{IMAGEPATH} ' )
+
+	assert_raises( Exception, table.addImage, "IMAGEPATH", -1,  1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  1, -1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3,  1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3, -1 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH",  3,  3 )
+	assert_raises( Exception, table.addImage, "IMAGEPATH", -1, -1 )
+
+def test_addImageNoContentArrayTable():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.addImage, "IMAGEPATH", 1, 1 )
+
+
+def test_getTableArrayTable():
+	table = initPandocMarkdownArrayTable()
+	stream = table.getTable()
+	assert_equal( stream, "\\begin{table}[h]\\begin{center}\\begin{tabular}{ccc}test&\\begin{tabular}{c}test\\\\test\\end{tabular}&test\\\\test&test&test\\\\test&\\begin{tabular}{c}test\\\\test\\end{tabular}&test\\\\\\end{tabular}\\caption{}\\end{center}\\end{table}" )
+
+def test_getTableNoContentArrayTable():
+	table = PandocMarkdownTable()
+	assert_raises( Exception, table.getTable )
+
+
+# ### PANDOCMARKDOWNWRITER TESTS ###
 
 def test_addTable():
 	table = initPandocMarkdownTable()

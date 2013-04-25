@@ -111,12 +111,20 @@ class PandocMarkdownTable():
 		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
+		print type(self.data[line][row])
+
 		if textStyle == self.textStyles[1]:
-			for k in range( 0, len( self.data[line][row] ) ):
-				self.data[line][row][k] = "\\"+"textit{"+ self.data[line][row][k] +"}"
+			if type( self.data[line][row] ) is not list :
+				self.data[line][row] = "\\"+"textit{"+ self.data[line][row] +"}"
+			else:
+				for k in range( 0, len( self.data[line][row] ) ):
+					self.data[line][row][k] = "\\"+"textit{"+ self.data[line][row][k] +"}"
 		elif textStyle == self.textStyles[2]:
-			for k in range( 0, len( self.data[line][row] ) ):
-				self.data[line][row][k] = "\\"+"textbf{"+ self.data[line][row][k] +"}"
+			if type( self.data[line][row] ) is not list :
+				self.data[line][row] = "\\"+"textbf{"+ self.data[line][row] +"}"
+			else:
+				for k in range( 0, len( self.data[line][row] ) ):
+					self.data[line][row][k] = "\\"+"textbf{"+ self.data[line][row][k] +"}"
 		elif textStyle != self.textStyles[0] :
 			raise ValueError("cell style is not available, possible values are: " + ", ".join(self.textStyles) )
 
@@ -131,13 +139,21 @@ class PandocMarkdownTable():
 		if self.textColors.count( color ) == 0:
 			raise ValueError("cell style is not available, possible values are: " + ", ".join(self.textColors) )
 
-		for k in range( 0, len( self.data[line][row] ) ):
-			if self.data[line][row][k].count( '\ {\color{') :
+		if type( self.data[line][row] ) is not list :
+			if self.data[line][row].count( '{\color{') :
 				for textColor in self.textColors :
-					if self.data[line][row][k].count( textColor ) :
-						self.data[line][row][k] = self.data[line][row][k].replace( textColor, color )
+					if self.data[line][row].count( textColor ) :
+						self.data[line][row] = self.data[line][row].replace( textColor, color )
 			else:
-				self.data[line][row][k] = "{"+"\\"+"color{"+color+"}"+self.data[line][row][k]+"}"
+				self.data[line][row] = "{"+"\\"+"color{"+color+"}"+self.data[line][row]+"}"
+		else:
+			for k in range( 0, len( self.data[line][row] ) ):
+				if self.data[line][row][k].count( '{\color{') :
+					for textColor in self.textColors :
+						if self.data[line][row][k].count( textColor ) :
+							self.data[line][row][k] = self.data[line][row][k].replace( textColor, color )
+				else:
+					self.data[line][row][k] = "{"+"\\"+"color{"+color+"}"+self.data[line][row][k]+"}"
 
 	def setRowAlignment( self, row, alignment ):
 		if self.size == [0,0]:
@@ -163,7 +179,10 @@ class PandocMarkdownTable():
 		if row  > self.size[1]-1 or row  < 0 :
 			raise ValueError("row value not valid")
 
-		self.data[line][row][0] = " \\" + "includegraphics{" + imagePath + "} "
+		if type( self.data[line][row] ) is not list :
+			self.data[line][row] = " \\" + "includegraphics{" + imagePath + "} "
+		else:
+			self.data[line][row][0] = " \\" + "includegraphics{" + imagePath + "} "
 
 
 	def getTable( self ):
@@ -184,9 +203,19 @@ class PandocMarkdownTable():
 		for i in range(0, self.size[0]) :
 			string += self.hLines[i]
 			for j in range( 0, len(self.data[i]) ):
-				if len(self.data[i][j]) == 1:
-					string += self.data[i][j][0] + "&"
+				if type( self.data[i][j] ) is not list:
+					print "Normal string !"
+					string += self.data[i][j]
+					if j != len(self.data[i])-1 :
+						string += "&"
+
+				elif len(self.data[i][j]) == 1 :
+					print "Single Array !"
+					string += self.data[i][j][0]
+					if j != len(self.data[i])-1 :
+						string += "&"
 				else:
+					print "Array !"
 					kHeight = len(self.data[i][j])
 					kWidth  = []
 					for k in range( 0, len(self.data[i][j]) ):
@@ -198,11 +227,13 @@ class PandocMarkdownTable():
 
 					for k in range( 0, kHeight ):
 						string += self.data[i][j][k]
-						if( k != kHeight-1 ):
+						if k != kHeight-1 :
 							string += "\\" + "\\"
 					
 					string += "\\" + "end{tabular}"
-					string += "\\" + "\\"
+					if j != len(self.data[i])-1 :
+						string += "&"
+			string += "\\" + "\\"
 
 		string += self.hLines[ self.size[0] ]
 
