@@ -215,7 +215,8 @@ class PandocMarkdownTable():
 					kWidth  = []
 					for k in range( 0, len(self.data[i][j]) ):
 						kWidth.append( len(self.data[i][j][k]) )
-					kWidthMax = max( kWidth )
+					if len( kWidth ) > 0 :
+						kWidthMax = max( kWidth )
 
 					string += "\\" + "begin{tabular}{"
 					string += self.rowAlignment[j] + "}"
