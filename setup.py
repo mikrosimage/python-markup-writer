@@ -9,7 +9,7 @@ setup(
 	description='Markdown Writer API',
 	author='Valentin NOEL, Marc-Antoine ARNAUD',
 	author_email='valent.noel@gmail.com',
-	url='https://github.com/mikrosimage/python-markdown-writer',
+	url='https://github.com/mikrosimage/python-markup-writer',
 	packages=['markdownwriter'],
     )
 
@@ -19,7 +19,7 @@ setup(
         description='Pandoc Markdown Writer API',
         author='Valentin NOEL, Marc-Antoine ARNAUD',
         author_email='valent.noel@gmail.com',
-        url='https://github.com/mikrosimage/python-markdown-writer',
+        url='https://github.com/mikrosimage/python-markup-writer',
         packages=['pandocmarkdownwriter'],
 	install_requires = ['markdownwriter>=1.0'],
     )
