@@ -258,7 +258,6 @@ class LatexTable():
 
 					string += "\\" + "begin{tabular}{"
 					string += "l"*kWidthMax + "}\n"
-					# string += self.rowAlignment[j] + "}"
 
 					for k in range( 0, kHeight ):
 						if type( self.data[i][j][k] ) is str or type( self.data[i][j][k] ) is unicode :
