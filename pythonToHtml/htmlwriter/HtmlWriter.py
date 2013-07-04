@@ -1,4 +1,5 @@
 from HtmlTable import *
+from utils import *
 
 class HtmlWriter():
 	def __init__( self, stream="" ):
