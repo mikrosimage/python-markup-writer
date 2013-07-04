@@ -1,4 +1,3 @@
-from utils import *
 import xml.etree.ElementTree as ET
 
 class HtmlTable():
@@ -58,7 +57,7 @@ class HtmlTable():
 
 		if self.title != "" :
 			string += "<caption>"
-			string += transformSpecialCharacters( self.title )
+			string += self.title
 			string += "<caption>\n"
 	
 		if len(self.columnWidth) != 0 :
@@ -201,6 +200,6 @@ class HtmlTable():
 		
 		if self.title != "" :
 			caption = ET.SubElement( table, "caption" )
-			caption.text = transformSpecialCharacters( self.title )
+			caption.text = self.title
 		
 		self.getChildData( table, treeElement, treeElement.tag )
