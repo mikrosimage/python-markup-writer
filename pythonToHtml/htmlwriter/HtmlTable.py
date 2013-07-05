@@ -194,7 +194,7 @@ class HtmlTable():
 
 		table = ET.SubElement( parent, "table" )
 		if id != "" :
-			table.set( "id", treeElement.tag + "-table" )
+			table.set( "class", treeElement.tag + "-table" )
 		if border != "" :
 			table.set( "border", str(border) )
 		
