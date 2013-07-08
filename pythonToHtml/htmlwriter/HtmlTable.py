@@ -178,7 +178,7 @@ class HtmlTable():
 				else :
 					# print ">>> NO LABEL"
 					color = ET.SubElement( td2, "font" )
-					if child.get( "status" ) == "false" :
+					if child.get( "status" ) == "False" :
 						color.set( "color", "#333" )
 					color.text = child.tag
 
