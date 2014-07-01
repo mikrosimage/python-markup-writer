@@ -30,4 +30,6 @@ setup(
         'pandocmarkdownwriter': os.path.join(toMarkdown_path,
                                              'pandocmarkdownwriter'),
     },
+    tests_require=['unittest2'],
+    test_suite='tests',
 )

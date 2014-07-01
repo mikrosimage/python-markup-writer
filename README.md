@@ -9,3 +9,11 @@ Installation
 ```bash
 ./setup.py install
 ```
+
+Run Tests
+---------
+
+```bash
+./setup.py flake8  # code style
+./setup.py test
+```
