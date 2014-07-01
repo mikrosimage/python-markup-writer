@@ -1,26 +1,33 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from distutils.core import setup
+import os
 from setuptools import setup
 
-setup(
-	name='MarkdownWriter',
-	version='1.0',
-	description='Markdown Writer API',
-	author='Valentin NOEL, Marc-Antoine ARNAUD',
-	author_email='valent.noel@gmail.com',
-	url='https://github.com/mikrosimage/python-markup-writer',
-	packages=['markdownwriter'],
-    )
+dir_name = os.path.abspath(os.path.dirname(__file__))
+toHtml_path = os.path.join(dir_name, 'pythonToHtml')
+toLatex_path = os.path.join(dir_name, 'pythonToLatex')
+toMarkdown_path = os.path.join(dir_name, 'pythonToMarkdown')
 
 setup(
-        name='PandocMarkdownWriter',
-        version='1.0',
-        description='Pandoc Markdown Writer API',
-        author='Valentin NOEL, Marc-Antoine ARNAUD',
-        author_email='valent.noel@gmail.com',
-        url='https://github.com/mikrosimage/python-markup-writer',
-        packages=['pandocmarkdownwriter'],
-	install_requires = ['markdownwriter>=1.0'],
-    )
-
+    name='MarkdownWriter',
+    version='2.0',
+    description='Markdown Writer API',
+    keywords='Markdown',
+    author='Valentin NOEL, Marc-Antoine ARNAUD',
+    author_email='valent.noel@gmail.com',
+    url='https://github.com/mikrosimage/python-markup-writer',
+    packages=[
+        'htmlwriter',
+        'latexwriter',
+        'markdownwriter',
+        'pandocmarkdownwriter',
+    ],
+    package_dir={
+        'htmlwriter': os.path.join(toHtml_path, 'htmlwriter'),
+        'latexwriter': os.path.join(toLatex_path, 'latexwriter'),
+        'markdownwriter': os.path.join(toMarkdown_path, 'markdownwriter'),
+        'pandocmarkdownwriter': os.path.join(toMarkdown_path,
+                                             'pandocmarkdownwriter'),
+    },
+)
