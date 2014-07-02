@@ -1,4 +1,4 @@
-import sys
+from MarkdownTable import MarkdownTable
 
 class MarkdownWriter():
 	def __init__( self, stream="" ):
@@ -120,3 +120,8 @@ class MarkdownWriter():
 	def addImage( self, imageUrl, imageTitle="", altText="text" ):
 		self.stream += "![Alt " + altText + "]"
 		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")"
+
+	def addTable(self, table):
+		if not isinstance(table, MarkdownTable):
+			raise ValueError("request a 'MarkdownTable' object")
+		self.stream += table.getTable()
