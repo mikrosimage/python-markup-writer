@@ -1,4 +1,7 @@
-from MarkdownTable import MarkdownTable
+try:
+    from MarkdownTable import MarkdownTable
+except ImportError:  # Python 3
+    from .MarkdownTable import MarkdownTable
 
 class MarkdownWriter():
 	def __init__( self, stream="" ):
