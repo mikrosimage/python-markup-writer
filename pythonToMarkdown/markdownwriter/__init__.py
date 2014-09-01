@@ -1,2 +1,5 @@
 # outer __init__.py
-from MarkdownWriter import *
+try:  # python2
+    from MarkdownWriter import *
+except ImportError:  # python3
+    pass
