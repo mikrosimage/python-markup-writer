@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from markdownwriter import MarkdownWriter
+from markdownwriter import MarkdownWriter, MarkdownTable
 import unittest
 
 
@@ -108,4 +108,35 @@ class TestMarkdownWriter(unittest.TestCase):
         self.assertEquals(
             self.md.transformSpecialCharacters("* ` _ {} ! & <"),
             '\* \` \_ \{\} \! &amp; &lt;'
+        )
+
+    def test_tableHeadersOnly(self):
+        table = MarkdownTable(["First Header", "Second", "3rd", "Last"])
+        self.md.addTable(table)
+        self.assertEquals(self.md.getStream(), """\
+First Header | Second | 3rd | Last
+-------------|--------|-----|-----
+""")
+
+    def test_tableHeadersAndRows(self):
+        table = MarkdownTable([u"First Header", u"Second", u"3rd", u"Fourth"])
+        table.addRow(["some data", "Longer column", "3", "Fourth"])
+        table.addRow(["some longer data", "small", "3", "Fourth"])
+        self.md.addTable(table)
+        self.assertEquals(self.md.getStream(), """\
+First Header     | Second        | 3rd | Fourth
+-----------------|---------------|-----|-------
+some data        | Longer column | 3   | Fourth
+some longer data | small         | 3   | Fourth
+""")
+
+    def test_tableRaises(self):
+        self.assertRaises(ValueError, MarkdownTable, None)
+        self.assertRaises(ValueError, MarkdownTable, "")
+        self.assertRaises(ValueError, MarkdownTable, [])
+        table = MarkdownTable([u"First Header", u"Second", u"3rd", u"Fourth"])
+        table.addRow(["some longer data", "small", "3"])
+        self.assertRaises(
+            ValueError, table.addRow,
+            ["some longer data", "small", "3", "Fourth", "Error maker"]
         )
