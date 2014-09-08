@@ -4,14 +4,14 @@
 import os
 from setuptools import setup
 
-dir_name = os.path.abspath(os.path.dirname(__file__))
+dir_name = os.path.dirname(__file__)
 toHtml_path = os.path.join(dir_name, 'pythonToHtml')
 toLatex_path = os.path.join(dir_name, 'pythonToLatex')
 toMarkdown_path = os.path.join(dir_name, 'pythonToMarkdown')
 
 setup(
     name='MarkdownWriter',
-    version='2.0',
+    version='1.1',
     description='Markdown Writer API',
     keywords='Markdown',
     author='Valentin NOEL, Marc-Antoine ARNAUD',
@@ -22,6 +22,7 @@ setup(
         'latexwriter',
         'markdownwriter',
         'pandocmarkdownwriter',
+        'tests',
     ],
     package_dir={
         'htmlwriter': os.path.join(toHtml_path, 'htmlwriter'),
