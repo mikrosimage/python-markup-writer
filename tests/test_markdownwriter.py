@@ -95,7 +95,11 @@ class TestMarkdownWriter(unittest.TestCase):
 
     def test_addImage(self):
         self.md.addImage("URL", "TITLE", "TEXT")
-        self.assertEquals(self.md.stream, '![Alt TEXT](URL \"TITLE\")')
+        self.assertEquals(self.md.stream, '![TEXT](URL \"TITLE\")')
+
+    def test_addImageWithLink(self):
+        self.md.addImageWithLink("IMAGE_URL", "LINK_URL", "TITLE", "TEXT")
+        self.assertEquals(self.md.stream, '[![TEXT](IMAGE_URL \"TITLE\")](LINK_URL)')
 
     def test_getStream(self):
         self.md.addText('text', style)

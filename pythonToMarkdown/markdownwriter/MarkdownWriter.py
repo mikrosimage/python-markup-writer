@@ -120,9 +120,14 @@ class MarkdownWriter():
 		else:
 			self.stream += ")"
 
-	def addImage( self, imageUrl, imageTitle="", altText="text" ):
-		self.stream += "![Alt " + altText + "]"
+	def addImage( self, imageUrl, imageTitle="", altText="Alt. text" ):
+		self.stream += "![" + altText + "]"
 		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")"
+
+	def addImageWithLink( self, imageUrl, linkUrl, imageTitle="", altText="Alt. text" ):
+		self.stream += "[![" + altText + "]"
+		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")]"
+		self.stream += "(" + linkUrl + ")"
 
 	def addTable(self, table):
 		if not isinstance(table, MarkdownTable):
