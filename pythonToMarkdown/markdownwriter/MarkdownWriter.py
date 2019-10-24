@@ -124,6 +124,11 @@ class MarkdownWriter():
 		self.stream += "![" + altText + "]"
 		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")"
 
+	def addImageWithLink( self, imageUrl, linkUrl, imageTitle="", altText="Alt. text" ):
+		self.stream += "[![" + altText + "]"
+		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")]"
+		self.stream += "(" + linkUrl + ")"
+
 	def addTable(self, table):
 		if not isinstance(table, MarkdownTable):
 			raise ValueError("request a 'MarkdownTable' object")
