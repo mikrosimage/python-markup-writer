@@ -120,8 +120,8 @@ class MarkdownWriter():
 		else:
 			self.stream += ")"
 
-	def addImage( self, imageUrl, imageTitle="", altText="text" ):
-		self.stream += "![Alt " + altText + "]"
+	def addImage( self, imageUrl, imageTitle="", altText="Alt. text" ):
+		self.stream += "![" + altText + "]"
 		self.stream += "(" + imageUrl + " \"" + imageTitle + "\")"
 
 	def addTable(self, table):
