@@ -1,5 +1,6 @@
-#!/usr/bin/python
-from markdownwriter import *
+#!/usr/bin/python3
+from markdownwriter.MarkdownWriter import MarkdownWriter
+from markdownwriter.MarkdownTable import MarkdownTable
 
 ### INPUT ###
 outputfile = "markdownTest.md"
